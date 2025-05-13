@@ -132,7 +132,7 @@ def main():
                 "und"
             ).lower()
 
-            is_default = s.get("disposition", {}).get("default", 0) == 1
+            is_default = s.get("disposition", {}).get("default", False) in [1, "1", True, "true", "True"]
 
             tracks.append({
                 "audio_index": idx,
