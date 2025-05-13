@@ -1,0 +1,16 @@
+# Ignore Python virtual environment
+venv/
+
+# Ignore JSON log files (success/warning reports)
+success-*.json
+warnings-*.json
+
+# Ignore any backup or temp files
+*.bak
+.__temp__.mkv
+
+# Ignore macOS metadata files
+.DS_Store
+
+mkvtoolnix/
+
