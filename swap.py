@@ -12,6 +12,23 @@ def find_video_files(root_folder):
             if file.lower().endswith(VIDEO_EXTENSIONS):
                 yield os.path.join(root, file)
 
+def get_default_audio_track_mkvmerge(file_path):
+    cmd = ["mkvmerge", "-i", "-F", "json", file_path]
+
+    try:
+        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
+        data = json.loads(result.stdout)
+        tracks = data.get("tracks", [])
+        for track in tracks:
+            if track["type"] == "audio" and track["properties"].get("language") == "eng":
+                if track["properties"].get("default_track") is True:
+                    return True
+    except Exception as e:
+        print(f"mkvmerge check failed: {e}")
+
+    return False
+
+
 def probe_audio_tracks(file_path):
     # ffprobe for language and default
     cmd = [
@@ -161,7 +178,7 @@ def main():
 
         english_track = english_tracks[0]
 
-        if english_track["default"]:
+        if english_track["default"] or get_default_audio_track_mkvmerge(video):
             continue  # Already default
 
         # Get mkvmerge track IDs
